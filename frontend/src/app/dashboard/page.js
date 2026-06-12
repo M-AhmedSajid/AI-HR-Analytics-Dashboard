@@ -1,4 +1,4 @@
-import employees from "@/lib/dummyData.json";
+import { fetchEmployeesServer } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import DashboardChartsSection from "@/components/DashboardChartsSection";
@@ -16,7 +16,8 @@ const recentEmployees = (data) =>
     .sort((a, b) => b.tenure_years - a.tenure_years)
     .slice(0, 5);
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const employees = await fetchEmployeesServer();
   const metrics = metricData(employees);
 
   return (

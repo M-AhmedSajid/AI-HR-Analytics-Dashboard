@@ -1,4 +1,7 @@
-import employees from "@/lib/dummyData.json";
+"use client";
+
+import { useEffect, useState } from "react";
+import { getEmployees } from "@/lib/api";
 import Badge from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 
@@ -10,6 +13,16 @@ const performanceColor = (score) => {
 };
 
 export default function EmployeesPage() {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getEmployees();
+      setEmployees(data);
+    };
+
+    fetchData();
+  }, []);
   return (
     <div className="space-y-7">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

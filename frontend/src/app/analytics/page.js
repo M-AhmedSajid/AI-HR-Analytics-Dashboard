@@ -1,9 +1,11 @@
-import employees from "@/lib/dummyData.json";
+import { fetchEmployeesServer } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import AnalyticsChartsSection from "@/components/AnalyticsChartsSection";
 
-export default function AnalyticsPage() {
+export default async function AnalyticsPage() {
+  const employees = await fetchEmployeesServer();
+
   return (
     <div className="space-y-7">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

@@ -1,7 +1,21 @@
 "use client";
-import employees from "@/lib/dummyData.json";
+import { useEffect, useState } from "react";
+import { getEmployees } from "@/lib/api";
 
 export default function EmployeeList() {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getEmployees();
+        setEmployees(data);
+      } catch (err) {
+        console.error("Failed to load employees", err);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="overflow-x-auto bg-white dark:bg-[#0b0b0b] border border-zinc-100 dark:border-zinc-800 rounded-lg">
       <table className="w-full text-sm text-left">
@@ -23,7 +37,7 @@ export default function EmployeeList() {
               <td className="px-4 py-3">${e.salary.toLocaleString()}</td>
               <td className="px-4 py-3">{e.experience} yrs</td>
               <td className="px-4 py-3">{Math.round(e.satisfaction * 100)}%</td>
-              <td className="px-4 py-3">{e.attrition_risk}</td>
+              <td className="px-4 py-3">{e.attrition_status}</td>
             </tr>
           ))}
         </tbody>
