@@ -18,10 +18,10 @@ export default function AnalyticsChartsSection({ employees }) {
   ]);
 
   const salaryBuckets = bucketCounts(employees, (employee) => employee.salary, [
-    { label: "60k-80k", min: 60000, max: 80000 },
-    { label: "80k-100k", min: 80000, max: 100000 },
-    { label: "100k-120k", min: 100000, max: 120000 },
-    { label: "120k+", min: 120000, max: Infinity },
+    { label: "3k-7k", min: 3000, max: 7000 },
+    { label: "7k-12k", min: 7000, max: 12000 },
+    { label: "12k-17k", min: 12000, max: 17000 },
+    { label: "17k+", min: 17000, max: Infinity },
   ]);
 
   const clusterData = Object.entries(

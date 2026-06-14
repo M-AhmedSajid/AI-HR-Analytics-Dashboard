@@ -1,78 +1,187 @@
 # AI HR Analytics Dashboard
 
-Modern HR Analytics Dashboard with a Next.js frontend and a FastAPI backend. The backend provides employee data, AI predictions (attrition + clusters), and salary recommendations. The frontend consumes these APIs and renders interactive charts.
+An academic, beginner-friendly AI-powered HR analytics system that analyzes employee records, predicts attrition risk, clusters employees by performance, and suggests salary optimizations. The project uses a Next.js frontend (App Router) and a FastAPI backend with simple, explainable ML models (Naive Bayes & KMeans).
 
-**Requirements**
-- **Node.js**: for the frontend. Tested with Node 18+.
-- **Python 3.10+**: for the backend. Install these Python packages: `fastapi`, `uvicorn`, `pandas`, `scikit-learn`, `joblib`, `openpyxl`.
+**Project goals**
+- Provide real-time prediction APIs for attrition and cluster assignment.
+- Visualize workforce insights using charts and a clean card-based UI.
+- Offer salary-adjustment recommendations combining rule-based logic and ML signals.
 
-**Repository layout**
-- **Backend**: [backend](backend) — FastAPI app, model training, and services.
-- **Frontend**: [frontend](frontend) — Next.js app (App Router) and UI components.
+**Tech Stack**
+- Frontend: Next.js (App Router), Tailwind CSS, Recharts
+- Backend: Python, FastAPI
+- ML: scikit-learn (Naive Bayes, KMeans), StandardScaler
+- Data store: Excel workbook (`db.xlsx`) used as a simple database
 
-**Quickstart — Backend**
-- Create a Python virtual environment and install dependencies (example):
+**Key Features**
+- Employee Management: view and browse employees (card UI) backed by an Excel workbook.
+- Attrition Prediction: Naive Bayes classifier that outputs `Yes` / `No` for leaving.
+- Employee Clustering: KMeans clusters labeled `Needs Attention`, `Core Workforce`, and `Top Talent`.
+- Salary Optimization: rule-based suggestions augmented by model outputs.
+- Analytics Dashboard: Recharts visualizations for attrition, clusters, and salary-performance trends.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install fastapi uvicorn pandas scikit-learn joblib openpyxl
+Getting started
+---------------
+
+Prerequisites
+- Node.js 18+ (frontend)
+- Python 3.10+ (backend)
+- Recommended packages: `fastapi`, `uvicorn`, `pandas`, `scikit-learn`, `joblib`, `openpyxl`
+
+Install frontend
+
+```bash
+cd frontend
+npm install
 ```
 
-- Prepare dataset (if you have raw HR data) or use the provided CSV in `backend/data`.
-- Train models (creates `models/naive_bayes.pkl` and `models/kmeans.pkl`):
+Run frontend (default: http://localhost:3000)
+
+```bash
+npm run dev
+```
+
+Install backend and run
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn app:app --reload --port 8000
+```
+
+Train ML models
 
 ```powershell
 cd backend
 python train_models.py
 ```
 
-- Run the API server:
+Place Excel data
+- Put your workbook at `backend/data/db.xlsx`. The project includes `backend/data/training_data.csv` for training and a synthetic/IBM-compatible schema.
 
-```powershell
-uvicorn app:app --reload --port 8000
+Project structure
+-----------------
+
+Top-level layout (important folders):
+
+```
+backend/
+	app.py
+	train_models.py
+	prepare_dataset.py
+	data/
+		db.xlsx
+		training_data.csv
+	models/
+	routes/
+		ai.py
+		analytics.py
+		employees.py
+		salary.py
+	services/
+		excel_service.py
+		attrition_service.py
+		clustering_service.py
+		salary_service.py
+
+frontend/
+	package.json
+	src/
+		app/
+			dashboard/page.js
+			employees/page.js
+			analytics/page.js
+			salary-optimization/page.js
+		components/
+		lib/api.js
+
+README.md
 ```
 
-Notes:
-- The backend reads employees from [backend/data/db.xlsx](backend/data/db.xlsx) via `backend/services/excel_service.py` and exposes endpoints under `/employees`, `/ai`, and `/salary`.
-- CORS is configured in [backend/app.py](backend/app.py) to allow `http://localhost:3000` by default.
+API Endpoints
+-------------
+All endpoints are served by the FastAPI backend (default port `8000`). Main endpoints:
 
-**Quickstart — Frontend**
-- Install dependencies and run dev server:
+- `POST /predict-attrition` — Predict attrition for a single employee payload. Returns `{"prediction": "Yes"|"No", "probability": 0.0}`.
+- `POST /predict-cluster` — Assigns a cluster id/name for a single record. Returns `{ "cluster": "Needs Attention"|"Core Workforce"|"Top Talent" }`.
+- `GET /employees` — Returns the list of employees read from `backend/data/db.xlsx` (optionally enriched with predictions).
+- `GET /analytics` — Aggregated analytics (attrition counts, cluster distribution, salary statistics) for dashboard charts.
+- `POST /salary-optimization` — Given an employee or selection, returns suggested salary adjustments and rationale.
+
+See the route implementations in `backend/routes/` for request/response shapes.
+
+ML Models (explanation)
+-----------------------
+- Attrition: a Naive Bayes classifier trained on `training_data.csv`. Input features include `salary`, `experience`, `satisfaction`, `overtime_hours`, `performance_score`, `tenure_years`. Output is binary `Yes` / `No`.
+- Clustering: KMeans run on scaled numeric features (StandardScaler). Clusters are post-labeled by business meaning:
+	- Cluster 0 → Needs Attention
+	- Cluster 1 → Core Workforce
+	- Cluster 2 → Top Talent
+- Models and scaler artifacts are saved with `joblib` under `backend/models/` for quick loading by the API.
+- Rationale: scikit-learn models are simple, interpretable, and fast — ideal for an academic/demo project.
+
+Data format
+-----------
+The project expects HR data with columns similar to the IBM HR dataset and the included synthetic data. Example columns:
+
+- `salary` (numeric)
+- `experience` (years)
+- `satisfaction` (0.0-1.0)
+- `overtime_hours` (numeric)
+- `performance_score` (numeric)
+- `tenure_years` (numeric)
+- `attrition_status` (target for training)
+
+Why Excel?
+- For this project we intentionally use an Excel workbook (`db.xlsx`) as a simple, file-backed datastore to keep the stack lightweight and easy to inspect for beginners.
+
+How to retrain models
+---------------------
+1. Update or replace `backend/data/training_data.csv` with your data following the column schema.
+2. Run:
 
 ```powershell
-cd frontend
-npm install
-npm run dev
+cd backend
+python train_models.py
 ```
 
-- If your backend runs on a different host/port, set the frontend API base URL before starting:
+This generates `backend/models/naive_bayes.pkl`, `backend/models/kmeans.pkl`, and the scaler artifact used by clustering.
 
-On Windows PowerShell:
-```powershell
-$env:NEXT_PUBLIC_API_URL = "http://localhost:8000"
-npm run dev
-```
+Frontend notes
+--------------
+- App routes available at:
+	- `/dashboard`
+	- `/employees`
+	- `/analytics`
+	- `/salary-optimization`
+- UI is card-first (employee cards) rather than tables; charts use Recharts in `frontend/src/components/charts`.
+- API client is `frontend/src/lib/api.js` — set `NEXT_PUBLIC_API_URL` to point at the backend when needed.
 
-**Key files**
-- Backend training: [backend/train_models.py](backend/train_models.py)
-- Backend routes: [backend/app.py](backend/app.py), [backend/routes/employees.py](backend/routes/employees.py), [backend/routes/ai.py](backend/routes/ai.py), [backend/routes/salary.py](backend/routes/salary.py)
-- Frontend API client: [frontend/src/lib/api.js](frontend/src/lib/api.js)
-- Frontend pages using real data: [frontend/src/app/dashboard/page.js](frontend/src/app/dashboard/page.js), [frontend/src/app/employees/page.js](frontend/src/app/employees/page.js)
+Future improvements
+-------------------
+- Add authentication & role-based access control.
+- Replace Excel with a lightweight database (SQLite/Postgres) for concurrency.
+- Add uncertainty calibration and explainability (SHAP/LIME) for attrition predictions.
+- Offer batch prediction and scheduled retraining pipelines.
+- Improve salary optimization with constrained optimization techniques.
 
-**Available API endpoints**
-- `GET /` — health message
-- `GET /employees/` — list employees (enriched with attrition and cluster)
-- `POST /employees/` — create an employee (expects employee schema)
-- `POST /ai/predict-attrition` — predict attrition for a single record
-- `POST /ai/predict-cluster` — predict cluster for a single record
-- `GET /salary/recommendations` — compute salary recommendations
+Troubleshooting & tips
+----------------------
+- Feature mismatch errors: re-run `train_models.py` and ensure the frontend/backend agree on feature order.
+- CORS errors: verify `allow_origins` in `backend/app.py` includes the frontend origin.
+- If models fail to load, confirm `joblib` artifacts exist under `backend/models/` after training.
 
-**Data & models**
-- Training CSV: [backend/data/training_data.csv](backend/data/training_data.csv)
-- Persistent employee workbook: [backend/data/db.xlsx](backend/data/db.xlsx)
-- Trained models are saved to `models/` by `train_models.py`.
+License & attribution
+---------------------
+This repository is an academic/demo project. Credit for the dataset format goes to the public IBM HR dataset used as a template for synthetic records.
 
-**Troubleshooting**
-- If you see feature-dimension errors (e.g. StandardScaler expecting a different number of features), re-run `train_models.py` to regenerate the scaler with the expected feature order.
-- If frontend shows CORS errors, ensure the backend's `allow_origins` in [backend/app.py](backend/app.py) matches the frontend origin.
+Questions or next steps
+----------------------
+If you want, I can:
+- Add a quick `requirements.txt` for the backend and a `start` script.
+- Add sample `curl` requests for each API endpoint.
+- Wire environment variables for easy local development.
+
+Enjoy exploring and extending the AI HR Analytics Dashboard System.

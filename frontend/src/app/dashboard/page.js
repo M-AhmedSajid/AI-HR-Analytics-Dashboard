@@ -49,7 +49,7 @@ export default async function Dashboard() {
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {recentEmployees(employees).map((employee) => (
-            <div key={employee.id} className="rounded-3xl border border-zinc-200 p-5 shadow-sm dark:border-zinc-800 dark:bg-[#08101a]">
+            <div key={employee.id} className="rounded-3xl border border-zinc-200 p-5 shadow-sm dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-slate-950 dark:text-white">{employee.name}</p>
