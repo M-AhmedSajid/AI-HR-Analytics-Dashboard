@@ -4,16 +4,16 @@ from services.model_loader import (
     cluster_mapping
 )
 
-import numpy as np
+import pandas as pd
 
 
 def assign_cluster(data):
-    features = np.array([[
-        data["salary"],
-        data["satisfaction"],
-        data.get("experience", 0),
-        data.get("tenure_years", 0)
-    ]])
+    features = pd.DataFrame([{
+    "salary": data["salary"],
+    "satisfaction": data["satisfaction"],
+    "experience": data.get("experience", 0),
+    "tenure_years": data.get("tenure_years", 0)
+}])
 
     scaled = kmeans_scaler.transform(features)
 

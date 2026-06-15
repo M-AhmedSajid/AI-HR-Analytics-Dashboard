@@ -23,7 +23,7 @@ def fitness(employees, chromosome):
         satisfaction = emp["satisfaction"]
 
         score += (performance * adjustment * 10)
-        score -= (1 - satisfaction) * 20
+        score += satisfaction * 20
 
     # budget penalty
     if total_cost > BUDGET_LIMIT:

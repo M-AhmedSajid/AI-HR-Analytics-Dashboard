@@ -24,6 +24,9 @@ def add_employee(employee):
         [df, pd.DataFrame([employee])],
         ignore_index=True
     )
+    
+    new_id = int(df["id"].max()) + 1
+    employee["id"] = new_id
 
     with pd.ExcelWriter(
         EXCEL_FILE,
@@ -37,3 +40,29 @@ def add_employee(employee):
         )
 
     return employee
+
+def delete_employee(employee_id):
+    df = pd.read_excel(EXCEL_FILE, sheet_name=SHEET_NAME)
+
+    df = df[df["id"] != employee_id]
+
+    df.to_excel(EXCEL_FILE, sheet_name=SHEET_NAME, index=False)
+
+    return {"message": "Employee deleted"}
+
+def update_employee(employee_id, updated_data):
+    df = pd.read_excel(EXCEL_FILE, sheet_name=SHEET_NAME, dtype=object)
+
+    index = df[df["id"] == employee_id].index
+
+    if len(index) == 0:
+        return None
+
+    idx = index[0]
+
+    for key, value in updated_data.items():
+        df.at[idx, key] = value
+
+    df.to_excel(EXCEL_FILE, sheet_name=SHEET_NAME, index=False)
+
+    return updated_data

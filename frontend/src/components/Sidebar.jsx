@@ -15,7 +15,7 @@ export default function Sidebar({ open, onClose }) {
 
   return (
     <>
-      <aside className="hidden md:flex md:w-72 flex-col bg-white border-r border-zinc-200 dark:bg-[#070707] dark:border-zinc-800">
+      <aside className="hidden md:flex md:w-72 flex-col bg-white border-r border-zinc-200 dark:bg-[#070707] dark:border-zinc-800 sticky top-0 h-screen">
         <div className="px-6 py-6 border-b border-zinc-100 dark:border-zinc-800">
           <Link href="/dashboard" className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             HR Analytics

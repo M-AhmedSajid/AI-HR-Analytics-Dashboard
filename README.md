@@ -1,11 +1,17 @@
 # AI HR Analytics Dashboard
 
-An academic, beginner-friendly AI-powered HR analytics system that analyzes employee records, predicts attrition risk, clusters employees by performance, and suggests salary optimizations. The project uses a Next.js frontend (App Router) and a FastAPI backend with simple, explainable ML models (Naive Bayes & KMeans).
+An academic, beginner-friendly AI-powered HR analytics system that analyzes employee records, predicts attrition risk, clusters employees by performance, and supports CRUD employee management with backend persistence. The project uses a Next.js frontend (App Router) and a FastAPI backend with explainable ML models and a genetic algorithm for salary optimization.
 
 **Project goals**
 - Provide real-time prediction APIs for attrition and cluster assignment.
+- Support full employee CRUD operations through the frontend and Excel-backed backend.
 - Visualize workforce insights using charts and a clean card-based UI.
-- Offer salary-adjustment recommendations combining rule-based logic and ML signals.
+- Offer salary-adjustment recommendations using a genetic algorithm informed by model signals.
+
+**Current progress**
+- Employee CRUD: add, edit, and delete employees from the `/employees` page.
+- Backend: Excel-backed persistence with FastAPI routes for GET, POST, PUT, DELETE.
+- Salary optimization: genetic algorithm-based recommendation engine powered by ML model signals.
 
 **Tech Stack**
 - Frontend: Next.js (App Router), Tailwind CSS, Recharts
@@ -14,10 +20,10 @@ An academic, beginner-friendly AI-powered HR analytics system that analyzes empl
 - Data store: Excel workbook (`db.xlsx`) used as a simple database
 
 **Key Features**
-- Employee Management: view and browse employees (card UI) backed by an Excel workbook.
+- Employee Management: view, add, edit, and delete employees through a card-based UI backed by an Excel workbook.
 - Attrition Prediction: Naive Bayes classifier that outputs `Yes` / `No` for leaving.
 - Employee Clustering: KMeans clusters labeled `Needs Attention`, `Core Workforce`, and `Top Talent`.
-- Salary Optimization: rule-based suggestions augmented by model outputs.
+- Salary Optimization: genetic algorithm generates optimized recommendations using model signals and business constraints.
 - Analytics Dashboard: Recharts visualizations for attrition, clusters, and salary-performance trends.
 
 Getting started
@@ -108,7 +114,7 @@ All endpoints are served by the FastAPI backend (default port `8000`). Main endp
 - `POST /predict-cluster` — Assigns a cluster id/name for a single record. Returns `{ "cluster": "Needs Attention"|"Core Workforce"|"Top Talent" }`.
 - `GET /employees` — Returns the list of employees read from `backend/data/db.xlsx` (optionally enriched with predictions).
 - `GET /analytics` — Aggregated analytics (attrition counts, cluster distribution, salary statistics) for dashboard charts.
-- `POST /salary-optimization` — Given an employee or selection, returns suggested salary adjustments and rationale.
+- `POST /salary-optimization` — Given an employee or selection, returns suggested salary adjustments and rationale using a genetic algorithm search.
 
 See the route implementations in `backend/routes/` for request/response shapes.
 
