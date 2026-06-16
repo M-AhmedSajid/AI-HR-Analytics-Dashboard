@@ -4,6 +4,7 @@ import { getEmployees } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import DashboardChartsSection from "@/components/DashboardChartsSection";
+import { useEffect, useState } from "react";
 
 const metricData = (data) => {
   const total = data.length;
@@ -18,8 +19,17 @@ const recentEmployees = (data) =>
     .sort((a, b) => b.tenure_years - a.tenure_years)
     .slice(0, 5);
 
-export default async function Dashboard() {
-  const employees = await getEmployees();
+export default function Dashboard() {
+  const [employees, setEmployees] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getEmployees();
+      setEmployees(data);
+    };
+
+    fetchData();
+  }, []);
+
   const metrics = metricData(employees);
 
   return (

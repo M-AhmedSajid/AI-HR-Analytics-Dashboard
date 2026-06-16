@@ -4,9 +4,18 @@ import { getEmployees } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import AnalyticsChartsSection from "@/components/AnalyticsChartsSection";
+import { useEffect, useState } from "react";
 
-export default async function AnalyticsPage() {
-  const employees = await getEmployees();
+export default function AnalyticsPage() {
+  const [employees, setEmployees] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getEmployees();
+      setEmployees(data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="space-y-7">

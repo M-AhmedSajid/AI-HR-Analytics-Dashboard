@@ -4,6 +4,7 @@ import { getEmployees } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import SalaryAllocationSection from "@/components/SalaryAllocationSection";
+import { useEffect, useState } from "react";
 
 const totalPayroll = (data) => data.reduce((sum, employee) => sum + employee.salary, 0);
 const riskCost = (data) =>
@@ -22,8 +23,16 @@ const recommendations = (data) =>
     .sort((a, b) => b.adjustment - a.adjustment)
     .slice(0, 6);
 
-export default async function SalaryOptimization() {
-  const employees = await getEmployees();
+export default function SalaryOptimization() {
+  const [employees, setEmployees] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getEmployees();
+      setEmployees(data);
+    };
+
+    fetchData();
+  }, []);
   const payroll = totalPayroll(employees);
   const risk = Math.round(riskCost(employees));
   const recs = recommendations(employees);
