@@ -11,12 +11,6 @@ export const getEmployees = async () => {
   return res.data;
 };
 
-export const fetchEmployeesServer = async () => {
-  const res = await fetch(`${API_BASE}/employees`);
-  if (!res.ok) throw new Error("Failed to fetch employees from API");
-  return res.json();
-};
-
 export const createEmployee = async (employee) => {
   const res = await API.post("/employees", employee);
   return res.data;

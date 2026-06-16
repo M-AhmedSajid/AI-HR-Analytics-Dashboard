@@ -1,5 +1,7 @@
 # AI HR Analytics Dashboard
 
+This repository is a semester project completed for a university course.
+
 An academic, beginner-friendly AI-powered HR analytics system that analyzes employee records, predicts attrition risk, clusters employees by performance, and supports CRUD employee management with backend persistence. The project uses a Next.js frontend (App Router) and a FastAPI backend with explainable ML models and a genetic algorithm for salary optimization.
 
 **Project goals**

@@ -1,4 +1,6 @@
-import { fetchEmployeesServer } from "@/lib/api";
+"use client";
+
+import { getEmployees } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import SalaryAllocationSection from "@/components/SalaryAllocationSection";
@@ -21,7 +23,7 @@ const recommendations = (data) =>
     .slice(0, 6);
 
 export default async function SalaryOptimization() {
-  const employees = await fetchEmployeesServer();
+  const employees = await getEmployees();
   const payroll = totalPayroll(employees);
   const risk = Math.round(riskCost(employees));
   const recs = recommendations(employees);

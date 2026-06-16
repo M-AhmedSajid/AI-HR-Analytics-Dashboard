@@ -1,4 +1,6 @@
-import { fetchEmployeesServer } from "@/lib/api";
+"use client";
+
+import { getEmployees } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import DashboardChartsSection from "@/components/DashboardChartsSection";
@@ -17,7 +19,7 @@ const recentEmployees = (data) =>
     .slice(0, 5);
 
 export default async function Dashboard() {
-  const employees = await fetchEmployeesServer();
+  const employees = await getEmployees();
   const metrics = metricData(employees);
 
   return (

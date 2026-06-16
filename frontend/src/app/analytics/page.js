@@ -1,10 +1,12 @@
-import { fetchEmployeesServer } from "@/lib/api";
+"use client";
+
+import { getEmployees } from "@/lib/api";
 import Card from "@/components/Card";
 import Badge from "@/components/ui/badge";
 import AnalyticsChartsSection from "@/components/AnalyticsChartsSection";
 
 export default async function AnalyticsPage() {
-  const employees = await fetchEmployeesServer();
+  const employees = await getEmployees();
 
   return (
     <div className="space-y-7">
