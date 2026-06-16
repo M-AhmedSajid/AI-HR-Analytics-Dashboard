@@ -19,14 +19,14 @@ def add_employee(employee):
         EXCEL_FILE,
         sheet_name=SHEET_NAME
     )
+    
+    new_id = int(df["id"].max()) + 1
+    employee["id"] = new_id
 
     df = pd.concat(
         [df, pd.DataFrame([employee])],
         ignore_index=True
     )
-    
-    new_id = int(df["id"].max()) + 1
-    employee["id"] = new_id
 
     with pd.ExcelWriter(
         EXCEL_FILE,

@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 
 const initialForm = {
-  id: Date.now(),
   name: "",
   role: "",
   department: "",
